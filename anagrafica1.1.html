@@ -3,13 +3,20 @@
 <body>
 <h1>di che generazione sei?</h1>
 <p id="demo"></p>
-<script>
-    <input type="text" id="nome" placeholder="Nome">
-    <input type="text" id="cognome" placeholder="Cognome">
-    <input type="text" id="indirizzo" placeholder="Indirizzo">
-    <input type="text" id="citta" placeholder="Città">
-    <input type="text" id="cap" placeholder="CAP (5 cifre)">
-    <input type="number" id="anni" placeholder="Età">
+<input type="text" id="nome" placeholder="Nome">
+<input type="text" id="cognome" placeholder="Cognome">
+<input type="text" id="indirizzo" placeholder="Indirizzo">
+<input type="text" id="citta" placeholder="Città">
+<input type="text" id="cap" placeholder="CAP (5 cifre)">
+<input type="number" id="anni" placeholder="Età">
+ <script>
+    function inserisciDati() {
+      const nome = document.getElementById('nome').value;
+      const cognome = document.getElementById('cognome').value;
+      const indirizzo = document.getElementById('indirizzo').value;
+      const citta = document.getElementById('citta').value;
+      const cap = document.getElementById('cap').value;
+      const eta = document.getElementById('eta').value;
    
     let generazione;
     switch (true) {
