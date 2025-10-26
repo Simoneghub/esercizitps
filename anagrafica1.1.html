@@ -1,58 +1,60 @@
 <!DOCTYPE html>
 <html>
-<body>
-<h1>di che generazione sei?</h1>
-<p id="demo"></p>
-<input type="text" id="nome" placeholder="Nome">
-<input type="text" id="cognome" placeholder="Cognome">
-<input type="text" id="indirizzo" placeholder="Indirizzo">
-<input type="text" id="citta" placeholder="Città">
-<input type="text" id="cap" placeholder="CAP (5 cifre)">
-<input type="number" id="anni" placeholder="Anni">
-<button onclick="inserisciDati()">Inserisci</button>
- <script>
-    function inserisciDati() {
-      const nome = document.getElementById('nome').value;
-      const cognome = document.getElementById('cognome').value;
-      const indirizzo = document.getElementById('indirizzo').value;
-      const citta = document.getElementById('citta').value;
-      const cap = document.getElementById('cap').value;
-      const anni = document.getElementById('anni').value;
-   
-    let generazione;
-    switch (true) {
-        case (anni>1946 && anni<1964):
-            generazione="baby Boomer";
-            break;
-        case (anni>1965 && anni<1980):
-            generazione="Generazione X";
-            break;
-        case (anni>1981 && anni<1996):
-            generazione="Millenials";
-            break;
-        case (anni>1997 && anni<2012):
-            generazione="Generazione Z";
-            break;
-        case (anni>2013):
-            generazione="Generazione Alpha";
-            break;
-        case (anni>1928 && anni<1945):
-            generazione="Generazione Silenziosa";
-            break;
-        case (anni>1901 && anni<1927):
-            generazione="Greatest Generation";
-            break;
-        default:
-            generazione="morto"
+  <body>
+    <h1>Di che generazione sei?</h1>
+    <p id="demo"></p>
 
+    <input type="text" id="nome" placeholder="Nome">
+    <input type="text" id="cognome" placeholder="Cognome">
+    <input type="text" id="indirizzo" placeholder="Indirizzo">
+    <input type="text" id="citta" placeholder="Città">
+    <input type="text" id="cap" placeholder="CAP (5 cifre)">
+    <input type="number" id="anno" placeholder="Anno di nascita">
+    <button onclick="inserisciDati()">Inserisci</button>
 
-    }
+    <script>
+      function inserisciDati() {
+        const nome = document.getElementById('nome').value;
+        const cognome = document.getElementById('cognome').value;
+        const indirizzo = document.getElementById('indirizzo').value;
+        const citta = document.getElementById('citta').value;
+        const cap = document.getElementById('cap').value;
+        const anno = parseInt(document.getElementById('anno').value);
 
+        let generazione;
 
-    document.getElementById("demo").innerHTML = "se sei nato nel: "+anni+"sei della generazione: ";
-    document.getElementById("demo").innerHTML = generazione;
+        switch (true) {
+          case (anno >= 1901 && anno <= 1927):
+            generazione = "Greatest Generation";
+            break;
+          case (anno >= 1928 && anno <= 1945):
+            generazione = "Generazione Silenziosa";
+            break;
+          case (anno >= 1946 && anno <= 1964):
+            generazione = "Baby Boomer";
+            break;
+          case (anno >= 1965 && anno <= 1980):
+            generazione = "Generazione X";
+            break;
+          case (anno >= 1981 && anno <= 1996):
+            generazione = "Millennials";
+            break;
+          case (anno >= 1997 && anno <= 2012):
+            generazione = "Generazione Z";
+            break;
+          case (anno >= 2013):
+            generazione = "Generazione Alpha";
+            break;
+          default:
+            generazione = "Valore non valido";
+        }
+
+        document.getElementById("demo").innerHTML = 
+          nome + " " + cognome + ", nato nel " + anno + 
+          ", appartieni alla generazione: <b>" + generazione + "</b>";
+      }
     </script>
-   
-    </body>
-    </html>
+  </body>
+</html>
+
 
