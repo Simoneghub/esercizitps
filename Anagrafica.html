@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Dinamico</title>
+    <style>
+        body {
+            display: flex;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .output {
+            margin-left: 30px;
+        }
+
+        #bottone {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <p>Nome: <input type="text" id="inputnome"></p>
+        <p>Cognome: <input type="text" id="inputcognome"></p>
+        <p>Indirizzo: <input type="text" id="inputindirizzo"></p>
+        <input id="bottone" type="button" value="Mostra Dati" onclick="stampa()">
+    </div>
+
+    <div class="output">
+        <p>Nome: <span id="nome"></span></p>
+        <p>Cognome: <span id="cognome"></span></p>
+        <p>Indirizzo: <span id="indirizzo"></span></p>
+    </div>
+
+    <script>
+        function stampa() {
+            document.getElementById("nome").innerText = document.getElementById("inputnome").value;
+            document.getElementById("cognome").innerText = document.getElementById("inputcognome").value;
+            document.getElementById("indirizzo").innerText = document.getElementById("inputindirizzo").value;
+        }
+    </script>
+
+</body>
+</html>
+
