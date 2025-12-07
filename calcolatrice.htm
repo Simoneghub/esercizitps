@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Calcolatrice minimale</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f3f4f6}
+    .calc{background:#fff;padding:12px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.08);width:300px}
+    #display{width:100%;height:48px;font-size:22px;padding:6px;border:1px solid #ddd;border-radius:6px;text-align:right;box-sizing:border-box}
+    .row{display:flex;gap:6px;margin-top:8px}
+    button{flex:1;padding:10px;border-radius:6px;border:1px solid #ccc;background:#fafafa;font-size:16px;cursor:pointer}
+    button.op{background:#ffe}
+    button.fn{background:#eef}
+    .wide{flex:2}
+  </style>
+</head>
+<body>
+  <div class="calc">
+    <input id="display" readonly value="0">
+
+    <div class="row">
+      <button id="mc">MC</button>
+      <button id="mr">MR</button>
+      <button id="mplus">M+</button>
+      <button id="mminus">M-</button>
+    </div>
+
+    <div class="row">
+      <button class="fn" id="pow">x^y</button>
+      <button class="fn" id="sqrt">√</button>
+      <button class="fn" id="percent">%</button>
+      <button class="op" id="div">÷</button>
+    </div>
+
+    <div class="row">
+      <button id="7">7</button>
+      <button id="8">8</button>
+      <button id="9">9</button>
+      <button class="op" id="mul">×</button>
+    </div>
+
+    <div class="row">
+      <button id="4">4</button>
+      <button id="5">5</button>
+      <button id="6">6</button>
+      <button class="op" id="sub">−</button>
+    </div>
+
+    <div class="row">
+      <button id="1">1</button>
+      <button id="2">2</button>
+      <button id="3">3</button>
+      <button class="op" id="add">+</button>
+    </div>
+
+    <div class="row">
+      <button id="0" class="wide">0</button>
+      <button id="dot">.</button>
+      <button id="equals" class="op">=</button>
+    </div>
+
+    <div class="row">
+      <button id="clear">C</button>
+      <button class="fn" id="sin">sin</button>
+      <button class="fn" id="cos">cos</button>
+      <button class="fn" id="tan">tan</button>
+    </div>
+
+    <div style="font-size:12px;color:#666;margin-top:8px">Le funzioni trigonometriche usano i gradi.</div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    let corrente = '0';
+    let precedente = null;
+    let operatore = null;
+    let attesa = false;
+    let memoria = 0;
+
+    function aggiorna(){ display.value = corrente; }
+
+    function cifra(d){
+      if(attesa){ corrente = d; attesa = false; }
+      else corrente = (corrente === '0') ? d : corrente + d;
+      aggiorna();
+    }
+
+    function punto(){
+      if(attesa){ corrente = '0.'; attesa = false; }
+      else if(!corrente.includes('.')) corrente += '.';
+      aggiorna();
+    }
+
+    function pulisci(){ corrente = '0'; precedente = null; operatore = null; attesa = false; aggiorna(); }
+
+    function impostaOperatore(next){
+      const v = parseFloat(corrente);
+      if(precedente == null) precedente = v;
+      else if(operatore){
+        precedente = calcola(operatore, precedente, v);
+        corrente = String(precedente);
+        aggiorna();
+      }
+      operatore = next;
+      attesa = true;
+    }
+
+    function calcola(o,a,b){
+      switch(o){
+        case '+': return a+b;
+        case '-': return a-b;
+        case '*': return a*b;
+        case '/': return b===0 ? NaN : a/b;
+        case 'pow': return Math.pow(a,b);
+      }
+      return b;
+    }
+
+    function uguale(){
+      if(operatore == null || precedente == null) return;
+      const v = parseFloat(corrente);
+      corrente = String(calcola(operatore, precedente, v));
+      precedente = null; operatore = null; attesa = false; aggiorna();
+    }
+
+    function radice(){ corrente = String(Math.sqrt(parseFloat(corrente))); aggiorna(); }
+    function percentuale(){ const x = parseFloat(corrente); corrente = (precedente!=null) ? String(precedente * x / 100) : String(x/100); aggiorna(); }
+    function seno(){ corrente = String(Math.sin(parseFloat(corrente) * Math.PI / 180)); aggiorna(); }
+    function coseno(){ corrente = String(Math.cos(parseFloat(corrente) * Math.PI / 180)); aggiorna(); }
+    function tangente(){ corrente = String(Math.tan(parseFloat(corrente) * Math.PI / 180)); aggiorna(); }
+
+    function memCanc(){ memoria = 0; }
+    function memRic(){ corrente = String(memoria); aggiorna(); }
+    function memAggiungi(){ memoria += parseFloat(corrente); }
+    function memSottrai(){ memoria -= parseFloat(corrente); }
+
+    ['0','1','2','3','4','5','6','7','8','9'].forEach(i=>document.getElementById(i).addEventListener('click',()=>cifra(i)));
+    document.getElementById('dot').addEventListener('click', punto);
+    document.getElementById('clear').addEventListener('click', pulisci);
+    document.getElementById('add').addEventListener('click', ()=>impostaOperatore('+'));
+    document.getElementById('sub').addEventListener('click', ()=>impostaOperatore('-'));
+    document.getElementById('mul').addEventListener('click', ()=>impostaOperatore('*'));
+    document.getElementById('div').addEventListener('click', ()=>impostaOperatore('/'));
+    document.getElementById('pow').addEventListener('click', ()=>impostaOperatore('pow'));
+    document.getElementById('equals').addEventListener('click', uguale);
+    document.getElementById('sqrt').addEventListener('click', radice);
+    document.getElementById('percent').addEventListener('click', percentuale);
+    document.getElementById('sin').addEventListener('click', seno);
+    document.getElementById('cos').addEventListener('click', coseno);
+    document.getElementById('tan').addEventListener('click', tangente);
+    document.getElementById('mc').addEventListener('click', memCanc);
+    document.getElementById('mr').addEventListener('click', memRic);
+    document.getElementById('mplus').addEventListener('click', memAggiungi);
+    document.getElementById('mminus').addEventListener('click', memSottrai);
+
+    aggiorna();
+  </script>
+</body>
+</html>
