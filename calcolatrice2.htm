@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Calcolatrice JS</title>
+    <style>
+        body { font-family: Arial; text-align: center; }
+        button { width: 60px; height: 40px; margin: 5px; }
+        input { width: 250px; height: 40px; font-size: 18px; text-align: right; }
+    </style>
+</head>
+<body>
+
+<h2>Calcolatrice</h2>
+
+<input type="text" id="display" disabled><br>
+
+<!-- Numeri -->
+<button onclick="addValue('7')">7</button>
+<button onclick="addValue('8')">8</button>
+<button onclick="addValue('9')">9</button>
+<button onclick="addOperator('/')">÷</button><br>
+
+<button onclick="addValue('4')">4</button>
+<button onclick="addValue('5')">5</button>
+<button onclick="addValue('6')">6</button>
+<button onclick="addOperator('*')">×</button><br>
+
+<button onclick="addValue('1')">1</button>
+<button onclick="addValue('2')">2</button>
+<button onclick="addValue('3')">3</button>
+<button onclick="addOperator('-')">−</button><br>
+
+<button onclick="addValue('0')">0</button>
+<button onclick="addValue('.')">.</button>
+<button onclick="calculate()">=</button>
+<button onclick="addOperator('+')">+</button><br>
+
+
+<button onclick="power()">x²</button>
+<button onclick="sqrt()">√x</button>
+<button onclick="percent()">%</button><br>
+
+<button onclick="sin()">sin</button>
+<button onclick="cos()">cos</button>
+<button onclick="tan()">tan</button><br>
+
+<button onclick="clearAll()">C</button>
+
+<script>
+    let values = [];
+    let operators = [];
+    let current = "";
+    let expression = "";
+
+    function addValue(val) {
+        current += val;
+        expression += val;
+        updateDisplay();
+    }
+
+    function addOperator(op) {
+        values.push(parseFloat(current));
+        operators.push(op);
+        current = "";
+        expression += " " + op + " ";
+        updateDisplay();
+    }
+
+    function calculate() {
+        values.push(parseFloat(current));
+
+        let vals = [...values];
+        let ops = [...operators];
+
+        
+        for (let i = 0; i < ops.length; i++) {
+            if (ops[i] === '*' || ops[i] === '/') {
+                let res = ops[i] === '*'
+                    ? vals[i] * vals[i + 1]
+                    : vals[i] / vals[i + 1];
+
+                vals.splice(i, 2, res);
+                ops.splice(i, 1);
+                i--;
+            }
+        }
+
+        
+        let result = vals[0];
+        for (let i = 0; i < ops.length; i++) {
+            if (ops[i] === '+') result += vals[i + 1];
+            if (ops[i] === '-') result -= vals[i + 1];
+        }
+
+        current = result.toString();
+        expression = current;
+        values = [];
+        operators = [];
+        updateDisplay();
+    }
+
+    function power() {
+        current = Math.pow(parseFloat(current), 2).toString();
+        expression = current;
+        updateDisplay();
+    }
+
+    function sqrt() {
+        current = Math.sqrt(parseFloat(current)).toString();
+        expression = current;
+        updateDisplay();
+    }
+
+    function percent() {
+        current = (parseFloat(current) / 100).toString();
+        expression = current;
+        updateDisplay();
+    }
+
+    function sin() {
+        current = Math.sin(parseFloat(current)).toString();
+        expression = current;
+        updateDisplay();
+    }
+
+    function cos() {
+        current = Math.cos(parseFloat(current)).toString();
+        expression = current;
+        updateDisplay();
+    }
+
+    function tan() {
+        current = Math.tan(parseFloat(current)).toString();
+        expression = current;
+        updateDisplay();
+    }
+
+    function clearAll() {
+        current = "";
+        expression = "";
+        values = [];
+        operators = [];
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        document.getElementById("display").value = expression;
+    }
+</script>
+
+</body>
+</html>
