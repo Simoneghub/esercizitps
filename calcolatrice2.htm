@@ -7,14 +7,13 @@ body {
     font-family: Arial;
 }
 #schermo {
-    width: 180px;
+    width: 190px;
     height: 30px;
-    font-size: 16px;
     text-align: right;
 }
 button {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 35px;
     margin: 2px;
 }
 </style>
@@ -44,41 +43,85 @@ button {
 <button onclick="uguale()">=</button>
 <button onclick="add('+')">+</button><br>
 
-<button onclick="c()">C</button>
+<button onclick="pot()">x²</button>
+<button onclick="rad()">√</button>
+<button onclick="perc()">%</button>
+<button onclick="c()">C</button><br>
+
+<button onclick="sin()">sin</button>
+<button onclick="cos()">cos</button>
+<button onclick="tan()">tan</button>
 
 <script>
 let mem = [];
 
 function add(v) {
     mem.push(v);
-    document.getElementById("schermo").value += v;
+    schermo.value += v;
 }
 
 function c() {
     mem = [];
-    document.getElementById("schermo").value = "";
+    schermo.value = "";
+}
+
+function leggiNumero() {
+    let n = "";
+    for (let i = 0; i < mem.length; i++) {
+        n += mem[i];
+    }
+    mem = [];
+    return parseFloat(n);
+}
+
+function pot() {
+    let n = leggiNumero();
+    schermo.value = Math.pow(n, 2);
+}
+
+function rad() {
+    let n = leggiNumero();
+    schermo.value = Math.sqrt(n);
+}
+
+function perc() {
+    let n = leggiNumero();
+    schermo.value = n / 100;
+}
+
+function sin() {
+    let n = leggiNumero();
+    schermo.value = Math.sin(n);
+}
+
+function cos() {
+    let n = leggiNumero();
+    schermo.value = Math.cos(n);
+}
+
+function tan() {
+    let n = leggiNumero();
+    schermo.value = Math.tan(n);
 }
 
 function uguale() {
     let arr = [];
-    let n = "";
+    let num = "";
 
     for (let i = 0; i < mem.length; i++) {
         if (!isNaN(mem[i]) || mem[i] == ".") {
-            n += mem[i];
+            num += mem[i];
         } else {
-            arr.push(parseFloat(n));
+            arr.push(parseFloat(num));
             arr.push(mem[i]);
-            n = "";
+            num = "";
         }
     }
-    if (n != "") arr.push(parseFloat(n));
+    if (num != "") arr.push(parseFloat(num));
 
     for (let i = 0; i < arr.length; i++) {
         if (arr[i] == "*" || arr[i] == "/") {
-            let r;
-            if (arr[i] == "*") r = arr[i-1] * arr[i+1];
-            else r = arr[i-1] / arr[i+1];
+            let r = arr[i] == "*" ? arr[i-1] * arr[i+1] : arr[i-1] / arr[i+1];
             arr.splice(i-1, 3, r);
             i--;
         }
@@ -90,7 +133,7 @@ function uguale() {
         if (arr[i] == "-") ris -= arr[i+1];
     }
 
-    document.getElementById("schermo").value = ris;
+    schermo.value = ris;
     mem = [];
 }
 </script>
