@@ -1,24 +1,48 @@
 <!doctype html>
 <html lang="it">
 <head>
+  <!-- meta charset per impostare la codifica dei caratteri -->
   <meta charset="utf-8" />
+  <!-- meta viewport per la corretta visualizzazione su dispositivi mobili -->
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- titolo della pagina -->
   <title>Calcolatrice minimale</title>
+
   <style>
+    /* stile del body: font, centratura e colore di sfondo */
     body{font-family:Arial,Helvetica,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f3f4f6}
+
+    /* contenitore principale della calcolatrice */
     .calc{background:#fff;padding:12px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.08);width:300px}
+
+    /* input display della calcolatrice */
     #display{width:100%;height:48px;font-size:22px;padding:6px;border:1px solid #ddd;border-radius:6px;text-align:right;box-sizing:border-box}
+
+    /* riga di pulsanti */
     .row{display:flex;gap:6px;margin-top:8px}
+
+    /* stile base dei bottoni */
     button{flex:1;padding:10px;border-radius:6px;border:1px solid #ccc;background:#fafafa;font-size:16px;cursor:pointer}
+
+    /* stile per i pulsanti operatore */
     button.op{background:#ffe}
+
+    /* stile per i pulsanti funzione */
     button.fn{background:#eef}
+
+    /* pulsanti larghi (es. 0) */
     .wide{flex:2}
   </style>
 </head>
+
 <body>
+  <!-- contenitore della calcolatrice -->
   <div class="calc">
+
+    <!-- display in sola lettura -->
     <input id="display" readonly value="0">
 
+    <!-- riga memoria -->
     <div class="row">
       <button id="mc">MC</button>
       <button id="mr">MR</button>
@@ -26,6 +50,7 @@
       <button id="mminus">M-</button>
     </div>
 
+    <!-- riga funzioni e divisione -->
     <div class="row">
       <button class="fn" id="pow">x^y</button>
       <button class="fn" id="sqrt">√</button>
@@ -33,6 +58,7 @@
       <button class="op" id="div">÷</button>
     </div>
 
+    <!-- riga numeri 7 8 9 -->
     <div class="row">
       <button id="7">7</button>
       <button id="8">8</button>
@@ -40,6 +66,7 @@
       <button class="op" id="mul">×</button>
     </div>
 
+    <!-- riga numeri 4 5 6 -->
     <div class="row">
       <button id="4">4</button>
       <button id="5">5</button>
@@ -47,6 +74,7 @@
       <button class="op" id="sub">−</button>
     </div>
 
+    <!-- riga numeri 1 2 3 -->
     <div class="row">
       <button id="1">1</button>
       <button id="2">2</button>
@@ -54,12 +82,14 @@
       <button class="op" id="add">+</button>
     </div>
 
+    <!-- riga 0 punto e uguale -->
     <div class="row">
       <button id="0" class="wide">0</button>
       <button id="dot">.</button>
       <button id="equals" class="op">=</button>
     </div>
 
+    <!-- riga cancella e funzioni trigonometriche -->
     <div class="row">
       <button id="clear">C</button>
       <button class="fn" id="sin">sin</button>
@@ -67,33 +97,64 @@
       <button class="fn" id="tan">tan</button>
     </div>
 
-    <div style="font-size:12px;color:#666;margin-top:8px">Le funzioni trigonometriche usano i gradi.</div>
+    <!-- nota informativa -->
+    <div style="font-size:12px;color:#666;margin-top:8px">
+      Le funzioni trigonometriche usano i gradi.
+    </div>
   </div>
 
   <script>
+    // riferimento all'input display
     const display = document.getElementById('display');
+
+    // variabile stringa che contiene il numero corrente
     let corrente = '0';
+
+    // variabile che memorizza il valore precedente
     let precedente = null;
+
+    // variabile che memorizza l'operatore selezionato
     let operatore = null;
+
+    // flag per indicare se si è in attesa di una nuova cifra
     let attesa = false;
+
+    // variabile per la memoria della calcolatrice
     let memoria = 0;
 
+    // funzione per aggiornare il display
     function aggiorna(){ display.value = corrente; }
 
+    // funzione per inserire una cifra
     function cifra(d){
-      if(attesa){ corrente = d; attesa = false; }
+      if(attesa){
+        corrente = d;
+        attesa = false;
+      }
       else corrente = (corrente === '0') ? d : corrente + d;
       aggiorna();
     }
 
+    // funzione per inserire il punto decimale
     function punto(){
-      if(attesa){ corrente = '0.'; attesa = false; }
+      if(attesa){
+        corrente = '0.';
+        attesa = false;
+      }
       else if(!corrente.includes('.')) corrente += '.';
       aggiorna();
     }
 
-    function pulisci(){ corrente = '0'; precedente = null; operatore = null; attesa = false; aggiorna(); }
+    // funzione per cancellare tutto
+    function pulisci(){
+      corrente = '0';
+      precedente = null;
+      operatore = null;
+      attesa = false;
+      aggiorna();
+    }
 
+    // funzione per impostare l'operatore
     function impostaOperatore(next){
       const v = parseFloat(corrente);
       if(precedente == null) precedente = v;
@@ -106,6 +167,7 @@
       attesa = true;
     }
 
+    // funzione di calcolo tra due numeri
     function calcola(o,a,b){
       switch(o){
         case '+': return a+b;
@@ -117,25 +179,39 @@
       return b;
     }
 
+    // funzione uguale
     function uguale(){
       if(operatore == null || precedente == null) return;
       const v = parseFloat(corrente);
       corrente = String(calcola(operatore, precedente, v));
-      precedente = null; operatore = null; attesa = false; aggiorna();
+      precedente = null;
+      operatore = null;
+      attesa = false;
+      aggiorna();
     }
 
+    // funzioni matematiche
     function radice(){ corrente = String(Math.sqrt(parseFloat(corrente))); aggiorna(); }
-    function percentuale(){ const x = parseFloat(corrente); corrente = (precedente!=null) ? String(precedente * x / 100) : String(x/100); aggiorna(); }
+    function percentuale(){
+      const x = parseFloat(corrente);
+      corrente = (precedente!=null) ? String(precedente * x / 100) : String(x/100);
+      aggiorna();
+    }
     function seno(){ corrente = String(Math.sin(parseFloat(corrente) * Math.PI / 180)); aggiorna(); }
     function coseno(){ corrente = String(Math.cos(parseFloat(corrente) * Math.PI / 180)); aggiorna(); }
     function tangente(){ corrente = String(Math.tan(parseFloat(corrente) * Math.PI / 180)); aggiorna(); }
 
+    // funzioni memoria
     function memCanc(){ memoria = 0; }
     function memRic(){ corrente = String(memoria); aggiorna(); }
     function memAggiungi(){ memoria += parseFloat(corrente); }
     function memSottrai(){ memoria -= parseFloat(corrente); }
 
-    ['0','1','2','3','4','5','6','7','8','9'].forEach(i=>document.getElementById(i).addEventListener('click',()=>cifra(i)));
+    // associazione eventi ai pulsanti numerici
+    ['0','1','2','3','4','5','6','7','8','9']
+      .forEach(i=>document.getElementById(i).addEventListener('click',()=>cifra(i)));
+
+    // associazione eventi agli altri pulsanti
     document.getElementById('dot').addEventListener('click', punto);
     document.getElementById('clear').addEventListener('click', pulisci);
     document.getElementById('add').addEventListener('click', ()=>impostaOperatore('+'));
@@ -154,6 +230,7 @@
     document.getElementById('mplus').addEventListener('click', memAggiungi);
     document.getElementById('mminus').addEventListener('click', memSottrai);
 
+    // aggiornamento iniziale del display
     aggiorna();
   </script>
 </body>
