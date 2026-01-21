@@ -2,15 +2,21 @@
 <html>
 <head>
 <title>Calcolatrice</title>
+
 <style>
+/* stile del body della pagina */
 body {
     font-family: Arial;
 }
+
+/* stile dello schermo della calcolatrice */
 #schermo {
     width: 190px;
     height: 30px;
-    text-align: right;
+    text-align: right;   /* testo allineato a destra */
 }
+
+/* stile di tutti i bottoni */
 button {
     width: 45px;
     height: 35px;
@@ -21,8 +27,12 @@ button {
 
 <body>
 
+<!-- input usato come schermo della calcolatrice -->
+<!-- disabled serve per impedire la scrittura manuale -->
 <input type="text" id="schermo" disabled><br>
 
+<!-- pulsanti numerici e operatori -->
+<!-- onclick richiama la funzione JS passando il valore -->
 <button onclick="add('7')">7</button>
 <button onclick="add('8')">8</button>
 <button onclick="add('9')">9</button>
@@ -43,6 +53,7 @@ button {
 <button onclick="uguale()">=</button>
 <button onclick="add('+')">+</button><br>
 
+<!-- pulsanti per operazioni speciali -->
 <button onclick="pot()">x²</button>
 <button onclick="rad()">√</button>
 <button onclick="perc()">%</button>
@@ -53,61 +64,80 @@ button {
 <button onclick="tan()">tan</button>
 
 <script>
+/* array usato come memoria per salvare i valori inseriti */
 let mem = [];
 
+/* funzione che aggiunge un valore alla memoria */
 function add(v) {
+    // inserisce il valore nell'array
     mem.push(v);
+    // mostra il valore sullo schermo
     schermo.value += v;
 }
 
+/* funzione per cancellare tutto */
 function c() {
+    // svuota l'array
     mem = [];
+    // pulisce lo schermo
     schermo.value = "";
 }
 
+/* funzione che legge i numeri presenti nella memoria */
 function leggiNumero() {
     let n = "";
+    // ciclo per unire i caratteri dell'array in una stringa
     for (let i = 0; i < mem.length; i++) {
         n += mem[i];
     }
+    // svuota la memoria
     mem = [];
+    // converte la stringa in numero
     return parseFloat(n);
 }
 
+/* funzione per il quadrato del numero */
 function pot() {
     let n = leggiNumero();
     schermo.value = Math.pow(n, 2);
 }
 
+/* funzione per la radice quadrata */
 function rad() {
     let n = leggiNumero();
     schermo.value = Math.sqrt(n);
 }
 
+/* funzione per la percentuale */
 function perc() {
     let n = leggiNumero();
     schermo.value = n / 100;
 }
 
+/* funzione per il seno */
 function sin() {
     let n = leggiNumero();
     schermo.value = Math.sin(n);
 }
 
+/* funzione per il coseno */
 function cos() {
     let n = leggiNumero();
     schermo.value = Math.cos(n);
 }
 
+/* funzione per la tangente */
 function tan() {
     let n = leggiNumero();
     schermo.value = Math.tan(n);
 }
 
+/* funzione che calcola il risultato finale */
 function uguale() {
-    let arr = [];
-    let num = "";
+    let arr = [];   // array per numeri e operatori
+    let num = "";   // variabile temporanea per costruire i numeri
 
+    // ciclo per separare numeri e operatori
     for (let i = 0; i < mem.length; i++) {
         if (!isNaN(mem[i]) || mem[i] == ".") {
             num += mem[i];
@@ -117,8 +147,11 @@ function uguale() {
             num = "";
         }
     }
+
+    // aggiunge l'ultimo numero se presente
     if (num != "") arr.push(parseFloat(num));
 
+    // gestione di moltiplicazioni e divisioni
     for (let i = 0; i < arr.length; i++) {
         if (arr[i] == "*" || arr[i] == "/") {
             let r = arr[i] == "*" ? arr[i-1] * arr[i+1] : arr[i-1] / arr[i+1];
@@ -127,13 +160,16 @@ function uguale() {
         }
     }
 
+    // gestione di addizioni e sottrazioni
     let ris = arr[0];
     for (let i = 1; i < arr.length; i += 2) {
         if (arr[i] == "+") ris += arr[i+1];
         if (arr[i] == "-") ris -= arr[i+1];
     }
 
+    // stampa del risultato
     schermo.value = ris;
+    // azzera la memoria
     mem = [];
 }
 </script>
