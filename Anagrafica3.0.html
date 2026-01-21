@@ -8,12 +8,16 @@
 <p id="demo2"></p>
 
 <script>
-// Create an Object:
+// per creare un oggetto si usa const "nome" e "[{":
 const persons = [{
+  //si inseriscono le variabili
   firstName: "nome",
   lastName: "cognome",
   age: 50,
   eyeColor: "blu"
+  // si chiude con "}" e:
+  // SE si finisce, si usa anche la "]", 
+  // SE invece continuamo aggiungendo un altro oggetto si mette la "," e si riapre un'altra parentesi graffa "{}".
 },
 {
   firstName: "pinco",
@@ -22,7 +26,7 @@ const persons = [{
   eyeColor: "marroni"
 }];
 
-// Display Data from the Object:
+// per mostrare un oggetto si usa:
 document.getElementById("demo1").innerHTML =
 persons[0].firstName +" "+persons[0].lastName +" ha " + persons[0].age + " anni e ha gli occhi "+ persons[0].eyeColor;
 
