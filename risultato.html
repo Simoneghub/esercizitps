@@ -1,0 +1,28 @@
+<html>
+<head>
+</head>
+
+<body>
+
+<h2>Parametri ricevuti</h2>
+
+<p id="stampa"></p>
+
+<script>
+
+    var url = document.location.search.substring(1);
+
+    var p1 = url.split("&")[0];
+    var p2 = url.split("&")[1];
+
+    var nome = p1.substr(5); 
+    var cognome = p2.substr(8); 
+
+    document.getElementById("stampa").innerHTML =
+        "Nome: " + nome + "<br>" +
+        "Cognome: " + cognome;
+
+</script>
+
+</body>
+</html>
