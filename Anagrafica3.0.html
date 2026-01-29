@@ -1,77 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inserisci Dati</title>
+</head>
 <body>
 
-<h1>Anagrafica 3.0</h1>
-<h2>Usando input, oggetti e array</h2>
+    <h2>Inserisci Dati</h2>
 
-<!-- input type text per inserire i dati -->
-Nome: <input type="text" id="n"><br>
-Cognome: <input type="text" id="c"><br>
-Età: <input type="text" id="e"><br>
-Occhi: <input type="text" id="o"><br><br>
+    <form id="datiForm">
+        Nome: <input type="text" id="nome"><br><br>
+        Cognome: <input type="text" id="cognome"><br><br>
+        Età: <input type="number" id="eta"><br><br>
+        Colore Occhi: <input type="text" id="coloreOcchi"><br><br>
+        <button type="submit">Aggiungi Dati</button>
+    </form>
 
-<!-- bottone che richiama la funzione JS -->
-<button onclick="inserisci()">Inserisci</button>
+    <h3>Elenco Dati</h3>
+    <p id="elencoDati"></p>
 
-<br><br>
+    <script>
+        var collection = [];
 
-<!-- tabella HTML per stampare i dati -->
-<table border="1">
-  <tr>
-    <th>Nome</th>
-    <th>Cognome</th>
-    <th>Età</th>
-    <th>Colore occhi</th>
-  </tr>
-  <!-- tbody dove verranno inserite le righe -->
-  <tbody id="tabella">
-  </tbody>
-</table>
+        document.getElementById('datiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
-<script>
-  // per creare una collection (array) si usa const nome = []
-  const persons = [];
+            var nome = document.getElementById('nome').value;
+            var cognome = document.getElementById('cognome').value;
+            var eta = document.getElementById('eta').value;
+            var coloreOcchi = document.getElementById('coloreOcchi').value;
 
-  // funzione che viene eseguita quando si clicca il bottone
-  function inserisci() {
+            collection.push(nome + " " + cognome + ", Età: " + eta + ", Colore Occhi: " + coloreOcchi);
 
-    // per creare un oggetto si usa const nome = {
-    const p = {
-      // si leggono i valori dagli input
-      nome: document.getElementById("n").value,
-      cognome: document.getElementById("c").value,
-      eta: document.getElementById("e").value,
-      occhi: document.getElementById("o").value
-      // si chiude l'oggetto con }
-    };
+            document.getElementById('nome').value = '';
+            document.getElementById('cognome').value = '';
+            document.getElementById('eta').value = '';
+            document.getElementById('coloreOcchi').value = '';
 
-    // per inserire un oggetto nell'array si usa push()
-    persons.push(p);
-
-    // variabile stringa per costruire la tabella
-    let testo = "";
-
-    // ciclo for per scorrere tutti gli oggetti dell'array
-    for (let i = 0; i < persons.length; i++) {
-
-      // apertura riga tabella
-      testo += "<tr>";
-
-      // per mostrare le proprietà dell'oggetto si usa nomeArray[indice].proprietà
-      testo += "<td>" + persons[i].nome + "</td>";
-      testo += "<td>" + persons[i].cognome + "</td>";
-      testo += "<td>" + persons[i].eta + "</td>";
-      testo += "<td>" + persons[i].occhi + "</td>";
-
-      // chiusura riga tabella
-      testo += "</tr>";
-    }
-
-    // si stampa tutto il contenuto nella tabella HTML
-    document.getElementById("tabella").innerHTML = testo;
-  }
-</script>
+            document.getElementById('elencoDati').textContent = collection.join(' | ');
+        });
+    </script>
 
 </body>
 </html>
