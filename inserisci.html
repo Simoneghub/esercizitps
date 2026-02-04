@@ -17,7 +17,6 @@
 </form>
 
 <script>
-    // se esiste già qualcosa nel localStorage lo recupero
     var elenco = JSON.parse(localStorage.getItem("elenco")) || [];
 
     document.getElementById("datiForm").addEventListener("submit", function(e) {
@@ -34,10 +33,10 @@
 
         localStorage.setItem("elenco", JSON.stringify(elenco));
 
-        // pulizia campi
         document.getElementById("datiForm").reset();
     });
 </script>
 
 </body>
 </html>
+
