@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inserisci Dati</title>
+</head>
+<body>
+
+
+    <h2>Inserisci Dati</h2>
+
+
+    <form id="datiForm">
+        Nome: <input type="text" id="nome"><br><br>
+        Cognome: <input type="text" id="cognome"><br><br>
+        Età: <input type="number" id="eta"><br><br>
+        Colore Occhi: <input type="text" id="coloreOcchi"><br><br>
+        Cap: <input type="text" id="cap"><br><br>
+        Mail: <input type="text" id="mail"><br><br>
+        <button type="submit">Aggiungi Dati</button>
+    </form>
+
+
+    <h3>Elenco Dati</h3>
+    <p id="elencoDati"></p>
+
+
+    <script>
+        var collection = [];
+
+
+        document.getElementById('datiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+
+            var nome = document.getElementById('nome').value;
+            var cognome = document.getElementById('cognome').value;
+            var eta = document.getElementById('eta').value;
+            var coloreOcchi = document.getElementById('coloreOcchi').value;
+            var cap = document.getElementById('cap').value;
+            var mail = document.getElementById('mail').value;
+
+
+            collection.push(nome + " " + cognome + ", Età: " + eta + ", Colore Occhi: " + coloreOcchi);
+
+
+            document.getElementById('nome').value = '';
+            document.getElementById('cognome').value = '';
+            document.getElementById('eta').value = '';
+            document.getElementById('coloreOcchi').value = '';
+            document.getElementById('cap').value = '';
+            document.getElementById('mail').value = '';
+
+
+            var controlloNome=/^[a-z A-Z ]+$/;
+            var controlloCognome=/^[a-z A-Z ]+$/;
+            var controlloEta=/^[0-9]+$/;
+            var controlloCap=/^[0-9]+$/;
+
+
+            document.getElementById('elencoDati').textContent = collection.join(' | ');
+        });
+    </script>
+
+
+</body>
+</html>
