@@ -2,7 +2,6 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inserisci Dati</title>
 </head>
 <body>
@@ -19,68 +18,63 @@
     <button type="submit">Aggiungi Dati</button>
 </form>
 
+<p id="errore" style="color:red;"></p>
+
 <h3>Elenco Dati</h3>
 <p id="elencoDati"></p>
 
 <script>
-    var collection = [];
 
-    document.getElementById('datiForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+var collection = [];
 
-        var nome = document.getElementById('nome').value.trim();
-        var cognome = document.getElementById('cognome').value.trim();
-        var eta = document.getElementById('eta').value.trim();
-        var coloreOcchi = document.getElementById('coloreOcchi').value.trim();
-        var cap = document.getElementById('cap').value.trim();
-        var mail = document.getElementById('mail').value.trim();
+document.getElementById("datiForm").addEventListener("submit", function(e) {
 
-        // Espressioni regolari
-        var controlloNome = /^[a-zA-Z]+$/;
-        var controlloCognome = /^[a-zA-Z]+$/;
-        var controlloCap = /^[0-9]+$/;
-        var controlloEmail = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,6}$/;
+    e.preventDefault();
 
-        // Validazioni
-        if (!controlloNome.test(nome)) {
-            alert("Nome non valido! Solo lettere.");
-            return;
-        }
+    var nome = document.getElementById("nome").value;
+    var cognome = document.getElementById("cognome").value;
+    var eta = document.getElementById("eta").value;
+    var coloreOcchi = document.getElementById("coloreOcchi").value;
+    var cap = document.getElementById("cap").value;
+    var mail = document.getElementById("mail").value;
 
-        if (!controlloCognome.test(cognome)) {
-            alert("Cognome non valido! Solo lettere.");
-            return;
-        }
+    var controlloNome = /^[a-zA-Z]+$/;
+    var controlloCognome = /^[a-zA-Z]+$/;
+    var controlloCap = /^[0-9]+$/;
+    var controlloEmail = /^[^@]+@[^@]+\.[a-zA-Z]{2,6}$/;
 
-        if (!controlloCap.test(cap)) {
-            alert("CAP non valido! Solo numeri.");
-            return;
-        }
+    var messaggio = "";
 
-        if (!controlloEmail.test(mail)) {
-            alert("Email non valida! Deve contenere @ e . con estensione da 2 a 6 caratteri.");
-            return;
-        }
+    if (!controlloNome.test(nome)) {
+        messaggio = "Nome non valido";
+    } else if (!controlloCognome.test(cognome)) {
+        messaggio = "Cognome non valido";
+    } else if (!controlloCap.test(cap)) {
+        messaggio = "CAP non valido";
+    } else if (!controlloEmail.test(mail)) {
+        messaggio = "Email non valida";
+    }
 
-        // Se tutti i controlli sono superati
-        collection.push(
-            nome + " " + cognome +
-            ", Età: " + eta +
-            ", Colore Occhi: " + coloreOcchi +
-            ", CAP: " + cap +
-            ", Email: " + mail
-        );
+    if (messaggio != "") {
+        document.getElementById("errore").textContent = messaggio;
+        return;
+    }
 
-        document.getElementById('elencoDati').textContent = collection.join(' | ');
+    document.getElementById("errore").textContent = "";
 
-        // Reset campi
-        document.getElementById('nome').value = '';
-        document.getElementById('cognome').value = '';
-        document.getElementById('eta').value = '';
-        document.getElementById('coloreOcchi').value = '';
-        document.getElementById('cap').value = '';
-        document.getElementById('mail').value = '';
-    });
+    collection.push(nome + " " + cognome + ", Età: " + eta + ", Colore Occhi: " + coloreOcchi + ", CAP: " + cap + ", Email: " + mail);
+
+    document.getElementById("elencoDati").textContent = collection.join(" | ");
+
+    document.getElementById("nome").value = "";
+    document.getElementById("cognome").value = "";
+    document.getElementById("eta").value = "";
+    document.getElementById("coloreOcchi").value = "";
+    document.getElementById("cap").value = "";
+    document.getElementById("mail").value = "";
+
+});
+
 </script>
 
 </body>
