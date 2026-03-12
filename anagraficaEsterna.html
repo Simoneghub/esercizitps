@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Lettura file CSV</title>
+
+<style>
+
+#output{
+  display:flex;
+  flex-wrap:wrap;
+}
+
+.blocco{
+  border:1px solid black;
+  padding:10px;
+  margin:5px;
+  width:200px;
+}
+
+</style>
+
+</head>
+<body>
+
+<h2>Carica file CSV</h2>
+<h3>Il file deve contenere in ordine Nome, Cognome, Mail e Numero di telefono</h3>
+
+<input type="file" id="fileInput" accept=".csv">
+<div id="output"></div>
+
+<script>
+
+const fileInput = document.getElementById("fileInput");
+const output = document.getElementById("output");
+
+fileInput.addEventListener("change", function () {
+
+  const file = this.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    const testo = e.target.result;
+    const dati = parseCSV(testo);
+  };
+
+  reader.readAsText(file);
+
+});
+
+
+function parseCSV(testo) {
+
+  const righe = testo.split("\n");
+
+  creaBlocchi(righe,0);
+
+}
+
+
+function creaBlocchi(righe,i){
+
+  if(i >= righe.length){
+    return;
+  }
+
+  let dati = righe[i].split(",");
+
+  let html = "<div class='blocco'>";
+
+  for (var j = 0; j < dati.length; j++) {
+    html += dati[j] + "<br>";
+  }
+
+  html += "</div>";
+
+  output.innerHTML += html;
+
+  creaBlocchi(righe,i+1);
+
+}
+
+</script>
+
+</body>
+</html>
