@@ -8,33 +8,31 @@
 
 <h2>Inserisci Dati</h2>
 
-<form id="datiForm">
+<form onsubmit="return aggiungi()">
     Nome: <input type="text" id="nome"><br><br>
     Cognome: <input type="text" id="cognome"><br><br>
     Età: <input type="number" id="eta"><br><br>
-    Colore Occhi: <input type="text" id="coloreOcchi"><br><br>
+    Colore Occhi: <input type="text" id="occhi"><br><br>
     CAP: <input type="text" id="cap"><br><br>
     Email: <input type="text" id="mail"><br><br>
-    <button type="submit">Aggiungi Dati</button>
+    <button type="submit">Aggiungi</button>
 </form>
 
 <p id="errore" style="color:red;"></p>
 
-<h3>Elenco Dati</h3>
-<p id="elencoDati"></p>
+<h3>Elenco</h3>
+<p id="lista"></p>
 
 <script>
 
-var collection = [];
+var dati = [];
 
-document.getElementById("datiForm").addEventListener("submit", function(e) {
-
-    e.preventDefault();
+function aggiungi() {
 
     var nome = document.getElementById("nome").value;
     var cognome = document.getElementById("cognome").value;
     var eta = document.getElementById("eta").value;
-    var coloreOcchi = document.getElementById("coloreOcchi").value;
+    var occhi = document.getElementById("occhi").value;
     var cap = document.getElementById("cap").value;
     var mail = document.getElementById("mail").value;
 
@@ -56,24 +54,36 @@ document.getElementById("datiForm").addEventListener("submit", function(e) {
     }
 
     if (messaggio != "") {
-        document.getElementById("errore").textContent = messaggio;
-        return;
+        document.getElementById("errore").innerHTML = messaggio;
+        return false;
     }
 
-    document.getElementById("errore").textContent = "";
+    document.getElementById("errore").innerHTML = "";
 
-    collection.push(nome + " " + cognome + ", Età: " + eta + ", Colore Occhi: " + coloreOcchi + ", CAP: " + cap + ", Email: " + mail);
+    var stringa = nome + " " + cognome + " eta:" + eta + " occhi:" + occhi + " cap:" + cap + " mail:" + mail;
 
-    document.getElementById("elencoDati").textContent = collection.join(" | ");
+    dati.push(stringa);
+
+    var testo = "";
+
+    for (var i = 0; i < dati.length; i++) {
+        testo = testo + dati[i];
+        if (i < dati.length - 1) {
+            testo = testo + " | ";
+        }
+    }
+
+    document.getElementById("lista").innerHTML = testo;
 
     document.getElementById("nome").value = "";
     document.getElementById("cognome").value = "";
     document.getElementById("eta").value = "";
-    document.getElementById("coloreOcchi").value = "";
+    document.getElementById("occhi").value = "";
     document.getElementById("cap").value = "";
     document.getElementById("mail").value = "";
 
-});
+    return false;
+}
 
 </script>
 
