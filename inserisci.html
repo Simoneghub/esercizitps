@@ -19,7 +19,7 @@
 <script>
     var elenco = JSON.parse(localStorage.getItem("elenco")) || [];
 
-    document.getElementById("datiForm").addEventListener("submit", function(e) {
+    document.getElementById("datiForm").onsubmit = function(e) {
         e.preventDefault();
 
         var persona = {
@@ -34,9 +34,8 @@
         localStorage.setItem("elenco", JSON.stringify(elenco));
 
         document.getElementById("datiForm").reset();
-    });
+    };
 </script>
 
 </body>
 </html>
-
