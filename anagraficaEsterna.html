@@ -34,21 +34,25 @@
 const fileInput = document.getElementById("fileInput");
 const output = document.getElementById("output");
 
-fileInput.addEventListener("change", function () {
+fileInput.onchange = function () {
 
   const file = this.files[0];
+
   if (!file) return;
 
   const reader = new FileReader();
 
   reader.onload = function (e) {
+
     const testo = e.target.result;
-    const dati = parseCSV(testo);
+
+    parseCSV(testo);
+
   };
 
   reader.readAsText(file);
 
-});
+};
 
 
 function parseCSV(testo) {
@@ -71,7 +75,9 @@ function creaBlocchi(righe,i){
   let html = "<div class='blocco'>";
 
   for (var j = 0; j < dati.length; j++) {
+
     html += dati[j] + "<br>";
+
   }
 
   html += "</div>";
