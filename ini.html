@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Configurazione</title>
+  <style>
+    body {
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    p {
+      text-align: center;
+      color: gray;
+    }
+
+    .form-box {
+      background: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+      max-width: 500px;
+      margin: 30px auto;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="text"], input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #aaa;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      margin-top: 20px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .nota {
+      font-size: 12px;
+      color: gray;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Configurazione Negozio</h1>
+  <p>Inserisci le informazioni del tuo negozio qui sotto</p>
+
+  <div class="form-box">
+
+    <label>Nome del negozio:</label>
+    <input type="text" id="nomeNegozio" value="Il mio negozio">
+
+    <label>Carica file CSV con i prodotti:</label>
+    <input type="file" id="fileCsv" accept=".csv">
+    <p class="nota">Il CSV deve avere queste colonne: marca, modello, descrizione, immagine, prezzo</p>
+
+    <button onclick="salva()">Vai al negozio</button>
+  </div>
+
+  <script>
+    function salva() {
+      var nome = document.getElementById("nomeNegozio").value;
+      var file = document.getElementById("fileCsv").files[0];
+
+      if (nome == "") {
+        alert("Inserisci il nome del negozio!");
+        return;
+      }
+
+      localStorage.setItem("nomeNegozio", nome);
+
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var testo = e.target.result;
+          var prodotti = leggiCsv(testo);
+          localStorage.setItem("prodotti", JSON.stringify(prodotti));
+          window.location.href = "index.html";
+        };
+        reader.readAsText(file);
+      } else {
+        if (localStorage.getItem("prodotti") == null) {
+          alert("Devi caricare un file CSV!");
+        } else {
+          window.location.href = "index.html";
+        }
+      }
+    }
+
+    function leggiCsv(testo) {
+      var righe = testo.split("\n");
+      var prodotti = [];
+
+      for (var i = 1; i < righe.length; i++) {
+        var riga = righe[i].trim();
+        if (riga == "") continue;
+
+        var valori = riga.split(";");
+
+        var prodotto = {
+          marca: valori[0],
+          modello: valori[1],
+          descrizione: valori[2],
+          immagine: valori[3],
+          prezzo: valori[4]
+        };
+
+        prodotti.push(prodotto);
+      }
+
+      return prodotti;
+    }
+  </script>
+
+</body>
+</html>

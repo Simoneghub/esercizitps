@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrello</title>
+  <!-- libreria jsPDF per creare il PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: #333;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h2 {
+      margin: 0;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .box {
+      background: white;
+      border: 1px solid #ccc;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table th, table td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    table th {
+      background-color: #333;
+      color: white;
+    }
+
+    .totale {
+      text-align: right;
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px;
+      border: none;
+      width: 100%;
+      margin-top: 15px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .btn-rimuovi {
+      background: red;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
+    .carrello-vuoto {
+      text-align: center;
+      color: gray;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <h2 id="nomeNegozio">Negozio</h2>
+    <div>
+      <a href="index.html">← Continua a comprare</a>
+    </div>
+  </div>
+
+  <h1>Il mio carrello</h1>
+
+  <div class="box">
+    <div id="contenuto"></div>
+    <div class="totale" id="totale"></div>
+    <button onclick="stampaPdf()" id="btnStampa" style="display:none">Stampa ricevuta PDF</button>
+  </div>
+
+  <script>
+    var prodotti = JSON.parse(localStorage.getItem("prodotti") || "[]");
+    var carrello = JSON.parse(localStorage.getItem("carrello") || "[]");
+    var nome = localStorage.getItem("nomeNegozio") || "Negozio";
+
+    document.getElementById("nomeNegozio").textContent = nome;
+
+    mostraCarrello();
+
+    function mostraCarrello() {
+      var div = document.getElementById("contenuto");
+      var divTotale = document.getElementById("totale");
+      var btnStampa = document.getElementById("btnStampa");
+
+      if (carrello.length == 0) {
+        div.innerHTML = "<div class='carrello-vuoto'>Il carrello è vuoto! <a href='index.html'>Vai al catalogo</a></div>";
+        divTotale.innerHTML = "";
+        btnStampa.style.display = "none";
+        return;
+      }
+
+      var html = "<table><tr><th>Prodotto</th><th>Prezzo</th><th></th></tr>";
+      var totale = 0;
+
+      for (var i = 0; i < carrello.length; i++) {
+        var id = carrello[i];
+        var p = prodotti[id];
+        if (!p) continue;
+
+        var prezzo = parseFloat(p.prezzo);
+        totale += prezzo;
+
+        html += "<tr>" +
+          "<td>" + p.marca + " " + p.modello + "</td>" +
+          "<td>€ " + prezzo.toFixed(2) + "</td>" +
+          "<td><button class='btn-rimuovi' onclick='rimuovi(" + i + ")'>X</button></td>" +
+        "</tr>";
+      }
+
+      html += "</table>";
+      div.innerHTML = html;
+      divTotale.innerHTML = "Totale: € " + totale.toFixed(2);
+      btnStampa.style.display = "block";
+    }
+
+    function rimuovi(indice) {
+      carrello.splice(indice, 1);
+      localStorage.setItem("carrello", JSON.stringify(carrello));
+      mostraCarrello();
+    }
+
+    function stampaPdf() {
+      var { jsPDF } = window.jspdf;
+      var doc = new jsPDF();
+
+      doc.setFontSize(20);
+      doc.text("Ricevuta di acquisto", 20, 20);
+
+      doc.setFontSize(12);
+      doc.text("Negozio: " + nome, 20, 35);
+
+      var data = new Date();
+      doc.text("Data: " + data.toLocaleDateString("it-IT"), 20, 45);
+
+      doc.line(20, 50, 190, 50);
+
+      doc.setFontSize(11);
+      doc.text("Prodotto", 20, 60);
+      doc.text("Prezzo", 150, 60);
+      doc.line(20, 63, 190, 63);
+
+      var y = 72;
+      var totale = 0;
+
+      for (var i = 0; i < carrello.length; i++) {
+        var id = carrello[i];
+        var p = prodotti[id];
+        if (!p) continue;
+
+        var prezzo = parseFloat(p.prezzo);
+        totale += prezzo;
+
+        doc.text(p.marca + " " + p.modello, 20, y);
+        doc.text("€ " + prezzo.toFixed(2), 150, y);
+        y += 10;
+      }
+
+      doc.line(20, y, 190, y);
+      y += 10;
+      doc.setFontSize(13);
+      doc.text("TOTALE: € " + totale.toFixed(2), 20, y);
+
+      doc.save("ricevuta.pdf");
+    }
+  </script>
+
+</body>
+</html>
