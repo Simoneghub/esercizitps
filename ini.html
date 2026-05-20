@@ -61,16 +61,6 @@
       color: gray;
       margin-top: 10px;
     }
-
-    .debug {
-      max-width: 500px;
-      margin: 10px auto;
-      font-size: 12px;
-      color: #888;
-      background: white;
-      border: 1px solid #ccc;
-      padding: 10px;
-    }
   </style>
 </head>
 <body>
@@ -89,25 +79,10 @@
     Colonne: marca ; modello ; descrizione ; immagine ; prezzo</p>
 
     <button onclick="salva()">Vai al negozio</button>
-    <button onclick="svuota()" style="background-color:#cc0000; margin-top:8px;">Svuota dati salvati e ricomincia</button>
 
-  </div>
-
-  <div class="debug">
-    <strong>Stato attuale nel browser:</strong><br>
-    Prodotti salvati: <span id="numProdotti">-</span><br>
-    Immagine primo prodotto: <span id="primaImmagine">-</span>
   </div>
 
   <script>
-
-    // Mostro subito lo stato attuale nel browser
-    var vecchiProdotti = JSON.parse(localStorage.getItem("prodotti") || "[]");
-    document.getElementById("numProdotti").textContent = vecchiProdotti.length;
-    if (vecchiProdotti.length > 0) {
-      document.getElementById("primaImmagine").textContent = vecchiProdotti[0].immagine;
-    }
-
     function salva() {
       var nome = document.getElementById("nomeNegozio").value;
       var file = document.getElementById("fileCsv").files[0];
@@ -124,11 +99,6 @@
         reader.onload = function(e) {
           var testo = e.target.result;
           var prodotti = leggiCsv(testo);
-          if (prodotti.length == 0) {
-            alert("Nessun prodotto trovato! Controlla che il file usi il punto e virgola ; come separatore.");
-            return;
-          }
-          alert("Trovati " + prodotti.length + " prodotti! Prima immagine: " + prodotti[0].immagine);
           localStorage.setItem("prodotti", JSON.stringify(prodotti));
           window.location.href = "catalogo.html";
         };
@@ -142,16 +112,8 @@
       }
     }
 
-    function svuota() {
-      localStorage.clear();
-      alert("Dati cancellati! Adesso ricarica il CSV.");
-      location.reload();
-    }
-
     function leggiCsv(testo) {
-      // Rimuovo eventuale BOM (carattere invisibile che Excel aggiunge)
       testo = testo.replace(/^\uFEFF/, "");
-
       var righe = testo.split("\n");
       var prodotti = [];
 
@@ -160,8 +122,7 @@
         if (riga == "") continue;
 
         var valori = riga.split(";");
-
-        if (valori.length < 5) continue; // salto righe incomplete
+        if (valori.length < 5) continue;
 
         var prodotto = {
           marca: valori[0].trim(),
@@ -176,7 +137,6 @@
 
       return prodotti;
     }
-
   </script>
 
 </body>
