@@ -104,7 +104,7 @@
   <div class="navbar">
     <h2 id="nomeNegozio">Negozio</h2>
     <div>
-      <a href="index.html">← Continua a comprare</a>
+      <a href="catalogo.html">← Continua a comprare</a>
     </div>
   </div>
 
@@ -131,7 +131,7 @@
       var btnStampa = document.getElementById("btnStampa");
 
       if (carrello.length == 0) {
-        div.innerHTML = "<div class='carrello-vuoto'>Il carrello è vuoto! <a href='index.html'>Vai al catalogo</a></div>";
+        div.innerHTML = "<div class='carrello-vuoto'>Il carrello è vuoto! <a href='catalogo.html'>Vai al catalogo</a></div>";
         divTotale.innerHTML = "";
         btnStampa.style.display = "none";
         return;
@@ -171,6 +171,7 @@
       var { jsPDF } = window.jspdf;
       var doc = new jsPDF();
 
+      // Titolo
       doc.setFontSize(20);
       doc.text("Ricevuta di acquisto", 20, 20);
 
@@ -180,8 +181,10 @@
       var data = new Date();
       doc.text("Data: " + data.toLocaleDateString("it-IT"), 20, 45);
 
+      // Riga separatrice
       doc.line(20, 50, 190, 50);
 
+      // Intestazione tabella
       doc.setFontSize(11);
       doc.text("Prodotto", 20, 60);
       doc.text("Prezzo", 150, 60);
@@ -203,11 +206,13 @@
         y += 10;
       }
 
+      // Totale
       doc.line(20, y, 190, y);
       y += 10;
       doc.setFontSize(13);
       doc.text("TOTALE: € " + totale.toFixed(2), 20, y);
 
+      // Salva il file
       doc.save("ricevuta.pdf");
     }
   </script>
